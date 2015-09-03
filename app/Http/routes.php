@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
+Route::get('/backend/login','Backend\LoginController@index');
+Route::post('/backend/login','Backend\LoginController@login');
+Route::get('/backend/logout','Backend\LoginController@logout');
+
