@@ -44,7 +44,8 @@ class LoginController extends Controller
                 $me->user_pass=$pass;
                 $me->save();
                 $data = array();
-                $data['ID']=$me->id;
+                $data['id']=$me->id;
+                $data['user_login']=$me->user_login;
                 $data['user_email']=$me->user_email;
                 Session::put('manage', $data);
                 return true;
@@ -55,5 +56,6 @@ class LoginController extends Controller
 
     public function logout(){
         Session::flush();
+        return redirect('backend/login');
     }
 }

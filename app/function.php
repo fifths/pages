@@ -10,3 +10,17 @@ function is_manage(){
     }
     return false;
 }
+
+function unlimitedForLevel($cate, $pid = 0, $level = 0,$parent='parent_id')
+{
+    $arr = array();
+    foreach ($cate as $k => $v) {
+        if ($v[$parent] == $pid) {
+            $v['level'] = $level;
+            $v['mark']=str_repeat('——',$level);
+            $arr[] = $v;
+            $arr = array_merge($arr, unlimitedForLevel($cate, $v['id'], $level + 1,$parent));
+        }
+    }
+    return $arr;
+}

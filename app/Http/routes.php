@@ -24,4 +24,6 @@ Route::get('/backend/logout','Backend\LoginController@logout');
 
 Route::group(['middleware' => 'manage'],function(){
     Route::get('/backend/index','Backend\IndexController@index');
+    Route::get('/backend/category/index','Backend\CategoryController@index');
 });
+
