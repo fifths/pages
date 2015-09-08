@@ -98,7 +98,7 @@
                 //iframe层-父子操作
                 layer.open({
                     type: 2,
-                    area: ['700px', '530px'],
+                    area: ['700px', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content: 'test/iframe.html'
