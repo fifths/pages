@@ -64,6 +64,9 @@
                         <li><a href="{{ url('backend/category/index') }}" class="am-cf"><span
                                         class="am-icon-check"></span> 分类管理<span
                                         class="am-icon-star am-fr am-margin-right admin-icon-yellow"></span></a></li>
+                        <li><a href="{{ url('backend/category/create') }}" class="am-cf"><span
+                                        class="am-icon-check"></span> 添加分类<span
+                                        class="am-icon-star am-fr am-margin-right admin-icon-yellow"></span></a></li>
                         {{--<li><a href="admin-help.html"><span class="am-icon-puzzle-piece"></span> 帮助页</a></li>
                         <li><a href="admin-gallery.html"><span class="am-icon-th"></span> 相册页面<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li>
                         <li><a href="admin-log.html"><span class="am-icon-calendar"></span> 系统日志</a></li>

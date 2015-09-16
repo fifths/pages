@@ -25,13 +25,11 @@ class CategoryController extends Controller
 
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * 添加分类
      */
     public function create()
     {
-        //
+        return view('backend.category.create');
     }
 
     /**
