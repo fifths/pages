@@ -11,13 +11,13 @@ use App\Http\Controllers\Controller;
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * 分类列表
+     * @return $this
      */
     public function index()
     {
         $data=Category::orderBy('sort','desc')->get()->toArray();
+        //无限级分类
         $category=unlimitedForLevel($data);
         $title='分类列表';
         return view('backend.category.index')->with('categorys',$category)->with('title',$title);
