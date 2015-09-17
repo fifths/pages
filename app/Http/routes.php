@@ -23,8 +23,20 @@ Route::get('/backend/logout','Backend\LoginController@logout');
 
 
 Route::group(['middleware' => 'manage'],function(){
+
     Route::get('/backend/index','Backend\IndexController@index');
+
+    //分类
     Route::get('/backend/category/index','Backend\CategoryController@index');
     Route::get('/backend/category/create','Backend\CategoryController@create');
+    Route::post('/backend/category/store','Backend\CategoryController@store');
+    Route::get('/backend/category/edit/{id}','Backend\CategoryController@edit');
+    Route::post('/backend/category/update/{id}','Backend\CategoryController@update');
+    Route::post('/backend/category/destroy/{id}','Backend\CategoryController@destroy');
+
+    //文章
+    Route::get('/backend/article/index','Backend\ArticleController@index');
+    Route::get('/backend/article/create','Backend\ArticleController@create');
+    Route::post('/backend/article/store','Backend\ArticleController@store');
 });
 

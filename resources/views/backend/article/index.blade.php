@@ -12,7 +12,7 @@
             <div class="am-btn-toolbar">
                 <div class="am-btn-group am-btn-group-xs">
                     <button type="button" class="am-btn am-btn-default l-layer"
-                            l-data-modal="{target: '{{ url('/backend/category/create') }}', title: '添加'}"
+                            l-data-modal="{target: '{{ url('/backend/article/create') }}', title: '添加',width:'100%',height:'100%'}"
                             ><span class="am-icon-plus"></span> 添加</button>
                     {{--<button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
                     <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核
@@ -53,30 +53,36 @@
                     <tr>
                         {{--<th class="table-check"><input type="checkbox"/></th>--}}
                         <th class="table-id">ID</th>
+                        <th>图片</th>
                         <th class="table-title">标题</th>
-                        <th class="">排序</th>
+                        <th class="table-title">别名</th>
+                        <th class="">日期</th>
+                        <th class="">状态</th>
                         <th class="table-set">操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                    @foreach ($categorys as $category)
+                    @foreach ($articles as $article)
 
                         <tr>
                             {{--<td><input type="checkbox"/></td>--}}
-                            <td>{{$category['id']}}</td>
-                            <td>{{$category['mark']}}{{$category['name']}}</td>
-                            <td class="am-hide-sm-only">{{$category['sort']}}</td>
+                            <td>{{$article['id']}}</td>
+                            <td>{{$article['picture']}}</td>
+                            <td>{{$article['title']}}</td>
+                            <td>{{$article['other_title']}}</td>
+                            <td class="am-hide-sm-only">{{$article['date']}}</td>
+                            <td>{{$article['status']}}</td>
                             <td>
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary l-layer" l-data-modal="{target: '{{ url('/backend/category/edit/'.$category['id']) }}', title: '添加'}"><span
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary l-layer" l-data-modal="{target: '{{ url('/backend/category/edit/'.$article['id']) }}', title: '添加'}"><span
                                                     class="am-icon-pencil-square-o"></span> 编辑
                                         </button>
                                         {{--<button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
                                                     class="am-icon-copy"></span> 复制
                                         </button>--}}
-                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only l-destroy" l-data-modal="{target: '{{ url('/backend/category/destroy/'.$category['id']) }}'}" >
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only l-destroy" l-data-modal="{target: '{{ url('/backend/category/destroy/'.$article['id']) }}'}" >
                                             <span class="am-icon-trash-o"></span> 删除
                                         </button>
                                     </div>
@@ -93,20 +99,9 @@
 
             <div class="am-margin am-cf">
                 <hr/>
-                <p class="am-fl">共 <span class="l-total">{{$categorys->total()}}</span> 条记录</p>
-{{--                <ol class="am-pagination am-fr">
-                    <li class="am-disabled"><a href="#">&laquo;</a></li>
-                    <li class="am-active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">&raquo;</a></li>
-
-                </ol>
-<hr />--}}
+                <p class="am-fl">共 <span class="l-total">{{$articles->total()}}</span> 条记录</p>
                 <span class="am-fr">
-                <?php echo $categorys->render(); ?>
+                <?php echo $articles->render(); ?>
                 </span>
             </div>
 
@@ -114,19 +109,4 @@
 
     </div>
 @stop
-{{--@section('js')
-    <script>
-        $(function(){
-            $('.s-layer').on('click',function(){
-                //iframe层-父子操作
-                layer.open({
-                    type: 2,
-                    area: ['700px', '600px'],
-                    fix: false, //不固定
-                    maxmin: true,
-                    content: '{{url('backend/category/create')}}'
-                });
-            })
-        })
-    </script>
-@stop--}}
+

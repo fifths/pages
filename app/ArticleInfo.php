@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class ArticleInfo extends Model
 {
-    protected $table = 'category';
+    protected $table = 'article_info';
     public $timestamps=false;
 }
