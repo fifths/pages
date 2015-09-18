@@ -53,10 +53,10 @@
                     <tr>
                         {{--<th class="table-check"><input type="checkbox"/></th>--}}
                         <th class="table-id">ID</th>
-                        <th>图片</th>
                         <th class="table-title">标题</th>
                         <th class="table-title">别名</th>
-                        <th class="">日期</th>
+                        <th class="">上映日期</th>
+                        <th class="">更新时间</th>
                         <th class="">状态</th>
                         <th class="table-set">操作</th>
                     </tr>
@@ -68,21 +68,28 @@
                         <tr>
                             {{--<td><input type="checkbox"/></td>--}}
                             <td>{{$article['id']}}</td>
-                            <td>{{$article['picture']}}</td>
                             <td>{{$article['title']}}</td>
                             <td>{{$article['other_title']}}</td>
                             <td class="am-hide-sm-only">{{$article['date']}}</td>
-                            <td>{{$article['status']}}</td>
+                            <td class="am-hide-sm-only">{{ date('Y-m-d',strtotime($article['updated_at'])) }}</td>
+                            <td>
+                                @if ($article['status'] === 1)
+                                    发布
+                                @else
+                                    未发布
+                                @endif
+                                {{--{{$article['status']}}--}}
+                            </td>
                             <td>
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary l-layer" l-data-modal="{target: '{{ url('/backend/category/edit/'.$article['id']) }}', title: '添加'}"><span
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary l-layer" l-data-modal="{target: '{{ url('/backend/article/edit/'.$article['id']) }}', title: '添加',width:'100%',height:'100%'}"><span
                                                     class="am-icon-pencil-square-o"></span> 编辑
                                         </button>
                                         {{--<button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
                                                     class="am-icon-copy"></span> 复制
                                         </button>--}}
-                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only l-destroy" l-data-modal="{target: '{{ url('/backend/category/destroy/'.$article['id']) }}'}" >
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only l-destroy" l-data-modal="{target: '{{ url('/backend/article/destroy/'.$article['id']) }}'}" >
                                             <span class="am-icon-trash-o"></span> 删除
                                         </button>
                                     </div>

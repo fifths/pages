@@ -2,7 +2,7 @@
 @section('title', 'Page Title')
 @section('content')
 
-        <form class="am-form" action="{{url('backend/article/store')}}" method="post" enctype="multipart/form-data">
+        <form class="am-form" action="{{url('backend/article/update/'.$article->id)}}" method="post" enctype="multipart/form-data">
             @if  (Session::get('message'))
             <div class="am-alert @if  (Session::get('message.errcode')=='0')am-alert-success @endif @if (Session::get('message.errcode')>'0')am-alert-danger @endif" data-am-alert>
                 <button type="button" class="am-close">&times;</button>
@@ -16,6 +16,8 @@
                     图片
                 </div>
                 <div class="am-u-sm-10">
+                    <img src="{{$pic}}" style="height:120px;border:1px solid #abc" />
+                    <br /><br />
                     <input type="file" name="picture">
                 </div>
             </div>
@@ -31,10 +33,10 @@
 
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
-                        日期
+                        上映日期
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="date" class="am-form-field" placeholder="日历组件" data-am-datepicker readonly/></p>
+                        <p><input type="text" name="date" value="{{$article->date}}" class="am-form-field" placeholder="日历组件" data-am-datepicker readonly/></p>
                     </div>
                 </div>
 
@@ -43,7 +45,7 @@
                     评分
                 </div>
                 <div class="am-u-sm-10">
-                    <input type="text" name="score" placeholder="10.0">
+                    <input type="text" name="score" value="{{$article->score}}" placeholder="10.0">
                 </div>
             </div>
 
@@ -52,7 +54,7 @@
                     标题
                 </div>
                 <div class="am-u-sm-10">
-                    <input type="text" name="title">
+                    <input type="text" name="title" value="{{$article->title}}">
                 </div>
             </div>
 
@@ -61,7 +63,7 @@
                         子标题
                     </div>
                     <div class="am-u-sm-10">
-                        <input type="text" name="other_title">
+                        <input type="text" name="other_title" value="{{$article->other_title}}">
                     </div>
                 </div>
 
@@ -70,7 +72,7 @@
                         内容
                     </div>
                     <div class="am-u-sm-10">
-                        <textarea rows="10" placeholder="" name="content"></textarea>
+                        <textarea rows="10" placeholder="" name="content">{{$article->content}}</textarea>
                     </div>
                 </div>
 
@@ -81,9 +83,32 @@
                         排序
                     </div>
                     <div class="am-u-sm-10">
-                        <input type="text" name="sort" placeholder="100">
+                        <input type="text" name="sort" placeholder="100" value="{{$article->sort}}">
                     </div>
                 </div>
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        发布
+                    </div>
+                    <div class="am-u-sm-10">
+                        <label class="am-radio">
+                            <input type="radio" name="status" value="1" data-am-ucheck @if ($article['status'] === 1)checked @endif>
+                            发布
+                        </label>
+                        <label class="am-radio">
+                            <input type="radio" name="status" value="0" data-am-ucheck @if ($article['status'] === 0)checked @endif>
+                            不发布
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="am-margin" style="text-align: center">
+                    <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+                    {{--<button type="button" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>--}}
+                </div>
+        </form>
 
                 <hr />
                 <div class="am-g am-margin-top">
@@ -226,30 +251,6 @@
 
 
 
-                <div class="am-g am-margin-top">
-                    <div class="am-u-sm-2">
-                        发布
-                    </div>
-                    <div class="am-u-sm-10">
-                        <label class="am-radio">
-                            <input type="radio" name="status" value="1" data-am-ucheck>
-                            发布
-                        </label>
-                        <label class="am-radio">
-                            <input type="radio" name="status" value="0" data-am-ucheck checked>
-                            不发布
-                        </label>
-                    </div>
-                </div>
-
-
-
-
-            <div class="am-margin" style="text-align: center">
-                <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
-                {{--<button type="button" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>--}}
-            </div>
-        </form>
 
 
 @stop

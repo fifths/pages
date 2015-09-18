@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Article;
 use App\ArticleInfo;
 use App\Info;
+use App\Picture;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,110 +13,167 @@ use App\Http\Controllers\Controller;
 
 class ArticleController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * 文章视图
      */
     public function index()
     {
-        $articles=Article::orderBy('sort','desc')->orderBy('id','asc')->paginate(10);
+        $articles = Article::where('status','>=','0')->orderBy('id', 'desc')->paginate(10);
         //无限级分类
         //$category=unlimitedForLevel($data);
-        $title='文章列表';
-        return view('backend.article.index')->with('articles',$articles)->with('title',$title);
+        $title = '文章列表';
+        return view('backend.article.index')->with('articles', $articles)->with('title', $title);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * 添加文章视图
      */
     public function create()
     {
         return view('backend.article.create');
     }
 
+
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
+     * 添加文章
      */
     public function store(Request $request)
     {
-        $time=date('Y-m-d',time());
-        $picture=$request->input('picture');
-        $date=$request->input('date')?:$time;
-        $title=$request->input('title');
-        $other_title=$request->input('other_title');
-        $content=$request->input('content');
-        $sort=$request->input('sort')?:100;
-        $score=$request->input('score')?:'10.0';
-        $status=$request->input('status')?:0;
-
-        //$area=$request->input('area');
+        $time = date('Y-m-d', time());
+        $picture = $request->file('picture');
+        $date = $request->input('date') ?: $time;
+        $title = $request->input('title');
+        $other_title = $request->input('other_title');
+        $content = $request->input('content');
+        $sort = $request->input('sort') ?: 100;
+        $score = $request->input('score') ?: '10.0';
+        $status = $request->input('status') ?: 0;
 
 
+        //type=1 alias 又名
+        $alias = $request->input('alias');
+        //type=2 tag 标签
+        $tag = $request->input('tag');
+        //type=3 area 地区
+        $area = $request->input('area');
+        //type=4 director 导演
+        $director = $request->input('director');
+        //type=5 writer 编剧
+        $writer = $request->input('writer');
+        //type=6 cast 主演
+        $cast = $request->input('cast');
+        //type=7 imdb imdb
+        $imdb = $request->input('imdb');
+        //type=8 other 其他
+        $other = $request->input('other');
+        //type=9 download 下载地址
+        $download = $request->input('download');
+        //type=10 douban 豆瓣
+        $douban = $request->input('douban');
+        //type=11 douban 类型
+        $category = $request->input('category');
 
 
-        if($title!=''){
-            $Article=new Article;
-            $Article->date=$date;
-            $Article->title=$title;
-            $Article->other_title=$other_title;
-            $Article->content=$content;
-            $Article->sort=$sort;
-            $Article->score=$score;
-            $Article->status=$status;
-            $Article->picture=$picture;
-            $rs=$Article->save();
-            if($rs){
-                $article_id=$Article->id;
 
-                //类型添加
-                $category=$request->input('category');
-                foreach($category as $v){
-                    if($v!=''){
-                        $info=Info::where('content','=',$v)->first();
-                        if($info){
-                            $info_id=$info->id;
-                        }else{
-                            $Info=new Info;
-                            $Info->content=$v;
-                            $Info->save();
-                            $info_id=$Info->id;
+        //die();
+        if ($title != '') {
+
+            if ($picture&&$picture->isValid()) {
+                $clientName = $picture->getClientOriginalName();
+                //$tmpName = $file->getFileName();
+                //$realPath = $file -> getRealPath();
+                $entension = $picture -> getClientOriginalExtension();
+                //$mimeTye = $file -> getMimeType();
+                //$size=$file->getClientSize();
+                $pass_type = array('jpg','jpeg','gif','bmp','png');
+                if(!in_array($entension,$pass_type)){
+                    $message = array(
+                        'errcode' => 1,
+                        'message' => '上传文件类型不正确!'
+                    );
+                    return redirect()->back()->with('message', $message);
+                }
+                $time=time();
+                $newName = date('Ymdhis',$time).'e'.md5($clientName.$time).".".$entension;
+                $path = $picture -> move(base_path().'/public/uploads/',$newName);
+                if($path){
+                    $Picture=new Picture;
+                    $Picture->name=$newName;
+                    $Picture->save();
+                    $picture_id=$Picture->id;
+                }
+            }
+
+
+
+            $Article = new Article;
+            $Article->date = trim($date);
+            $Article->title = trim($title);
+            $Article->other_title = trim($other_title);
+            $Article->content = trim($content);
+            $Article->sort = trim($sort);
+            $Article->score = trim($score);
+            $Article->status = trim($status);
+            $Article->picture_id = $picture_id?:0;
+            $rs = $Article->save();
+            if ($rs) {
+                $article_id = $Article->id;
+                $data = array();
+                $data[1] = $alias;
+                $data[2] = $tag;
+                $data[3] = $area;
+                $data[4] = $director;
+                $data[5] = $writer;
+                $data[6] = $cast;
+                $data[7] = $imdb;
+                $data[8] = $other;
+                $data[9] = $download;
+                $data[10] = $douban;
+                $data[11] = $category;
+                foreach ($data as $k => $v) {
+                    if ($v != '') {
+                        foreach ($v as $kk => $vv) {
+                            if ($vv != '') {
+                                $content = trim($vv);
+                                $info = Info::where('content', '=', $content)->first();
+                                if ($info) {
+                                    $info_id = $info->id;
+                                } else {
+                                    $Info = new Info;
+                                    $Info->content = $content;
+                                    $Info->save();
+                                    $info_id = $Info->id;
+                                }
+                                //echo $info_id,'<br />';
+                                $ArticleInfo = new ArticleInfo;
+                                $ArticleInfo->article_id = $article_id;
+                                $ArticleInfo->info_id = $info_id;
+                                $ArticleInfo->type_id = $k;
+                                $ArticleInfo->save();
+                            }
                         }
-                        //echo $info_id,'<br />';
-                        $ArticleInfo= new ArticleInfo;
-                        $ArticleInfo->article_id=$article_id;
-                        $ArticleInfo->info_id=$info_id;
-                        $ArticleInfo->type_id=11;
-                        $ArticleInfo->save();
                     }
-        }
+                }
 
-
-
-
-                $message=array(
-                    'errcode'=>0,
-                    'message'=>'success'
+                $message = array(
+                    'errcode' => 0,
+                    'message' => 'success'
                 );
-                return redirect()->back()->with('message',$message);
+                return redirect()->back()->with('message', $message);
             }
         }
-        $message=array(
-            'errcode'=>1,
-            'message'=>'failed!'
+        $message = array(
+            'errcode' => 1,
+            'message' => 'failed!'
         );
-        return redirect()->back()->with('message',$message);
+        return redirect()->back()->with('message', $message);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function show($id)
@@ -124,36 +182,122 @@ class ArticleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
+     * 修改文章视图
+     * @param $id
+     * @return $this
      */
     public function edit($id)
     {
-        //
+        $article=Article::find($id);
+        $picture=$article->picture;
+        $pic='';
+        if($picture){
+            $picturename=$picture->name;
+            $pic='/uploads/'.$picturename;
+        }
+        return view('backend.article.edit')->with('article',$article)->with('pic',$pic);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return Response
+     * 修改文章
+     * @param Request $request
+     * @param $id
      */
     public function update(Request $request, $id)
     {
-        //
+        $article=Article::find($id);
+        if($article){
+            $picture = $request->file('picture');
+            //$picture_id=0;
+            if ($picture&&$picture->isValid()) {
+                $clientName = $picture->getClientOriginalName();
+                //$tmpName = $file->getFileName();
+                //$realPath = $file -> getRealPath();
+                $entension = $picture -> getClientOriginalExtension();
+                //$mimeTye = $file -> getMimeType();
+                //$size=$file->getClientSize();
+                $pass_type = array('jpg','jpeg','gif','bmp','png');
+                if(!in_array($entension,$pass_type)){
+                    $message = array(
+                        'errcode' => 1,
+                        'message' => '上传文件类型不正确!'
+                    );
+                    return redirect()->back()->with('message', $message);
+                }
+                $time=time();
+                $newName = date('Ymdhis',$time).'e'.md5($clientName.$time).".".$entension;
+                $path = $picture -> move(base_path().'/public/uploads/',$newName);
+                if($path){
+                    $Picture=new Picture;
+                    $Picture->name=$newName;
+                    $Picture->save();
+                    $picture_id=$Picture->id;
+                }
+            }
+
+            $time = date('Y-m-d', time());
+            $date = $request->input('date') ?: $time;
+            $title = $request->input('title');
+            $other_title = $request->input('other_title');
+            $content = $request->input('content');
+            $sort = $request->input('sort') ?: 100;
+            $score = $request->input('score') ?: '10.0';
+            $status = $request->input('status') ?: 0;
+
+            $article->date = trim($date);
+            $article->title = trim($title);
+            $article->other_title = trim($other_title);
+            $article->content = trim($content);
+            $article->sort = trim($sort);
+            $article->score = trim($score);
+            $article->status = trim($status);
+            if(isset($picture_id)){
+                $article->picture_id=$picture_id;
+            }
+            $rs=$article->save();
+            if($rs){
+                $message=array(
+                    'errcode'=>0,
+                    'message'=>'success'
+                );
+                return redirect()->back()->with('message',$message);
+            }
+        }
+
+        $message=array(
+            'errcode'=>404,
+            'message'=>'not found!'
+        );
+        return redirect()->back()->with('message',$message);
+        //echo isset($picture_id);
+
+
+
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
+     * 删除文章
+     * @param $id
+     * @return string
      */
     public function destroy($id)
     {
-        //
+        $article = Article::find($id);
+        if ($article) {
+            $article->status = -1;
+            $rs = $article->save();
+            if ($rs) {
+                $data = array(
+                    'errcode' => 0,
+                    'message' => 'success'
+                );
+                return json_encode($data);
+            }
+        }
+        $data=array(
+            'errcode'=>1,
+            'message'=>'failed!'
+        );
+        return json_encode($data);
     }
 }
