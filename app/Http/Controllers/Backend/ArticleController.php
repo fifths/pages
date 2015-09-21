@@ -97,7 +97,8 @@ class ArticleController extends Controller
                 }
                 $time=time();
                 $newName = date('Ymdhis',$time).'e'.md5($clientName.$time).".".$entension;
-                $path = $picture -> move(base_path().'/public/uploads/',$newName);
+
+                $path = $picture -> move(base_path().'/public/uploads/'.date('Y-m',$time),$newName);
                 if($path){
                     $Picture=new Picture;
                     $Picture->name=$newName;
@@ -197,7 +198,7 @@ class ArticleController extends Controller
         $pic='';
         if($picture){
             $picturename=$picture->name;
-            $pic='/uploads/'.$picturename;
+            $pic='/uploads/'.date('Ym',strtotime($picture->created_at)).'/'.$picturename;
         }
 
         //find tag content
@@ -248,7 +249,7 @@ class ArticleController extends Controller
                 }
                 $time=time();
                 $newName = date('Ymdhis',$time).'e'.md5($clientName.$time).".".$entension;
-                $path = $picture -> move(base_path().'/public/uploads/',$newName);
+                $path = $picture -> move(base_path().'/public/uploads/'.date('Ym',$time),$newName);
                 if($path){
                     $Picture=new Picture;
                     $Picture->name=$newName;
