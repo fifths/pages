@@ -190,6 +190,9 @@ class ArticleController extends Controller
     public function edit($id)
     {
         $article=Article::find($id);
+        if(!$article){
+            return redirect('backend/article/index');
+        }
         $picture=$article->picture;
         $pic='';
         if($picture){
