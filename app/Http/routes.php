@@ -41,5 +41,8 @@ Route::group(['middleware' => 'manage'],function(){
     Route::get('/backend/article/edit/{id}','Backend\ArticleController@edit');
     Route::post('/backend/article/update/{id}','Backend\ArticleController@update');
     Route::post('/backend/article/destroy/{id}','Backend\ArticleController@destroy');
+
+    //tag
+    Route::post('/backend/articleinfo/destroy/{id}','Backend\ArticleInfoController@destroy');
 });
 

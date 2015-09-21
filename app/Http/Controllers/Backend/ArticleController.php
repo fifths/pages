@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use DB;
 use App\Article;
 use App\ArticleInfo;
 use App\Info;
@@ -195,7 +196,25 @@ class ArticleController extends Controller
             $picturename=$picture->name;
             $pic='/uploads/'.$picturename;
         }
-        return view('backend.article.edit')->with('article',$article)->with('pic',$pic);
+
+        //find tag content
+        $results = DB::select('SELECT a.id,a.type_id,b.content FROM `lee_article_info` AS a LEFT JOIN `lee_info` AS b ON a.info_id=b.id WHERE article_id = ?', [$id]);
+        $info=array();
+        foreach($results as $k=>$v){
+            //subgroup
+            $data=array();
+            $data['id']=$v->id;
+            $data['content']=$v->content;
+            $info[$v->type_id][]=$data;
+        }
+
+
+        /*foreach($info[2] as $v=>$k){
+            var_dump($k['id']);
+        }*/
+
+        //return $info;
+        return view('backend.article.edit')->with('article',$article)->with('pic',$pic)->with('info',$info);
     }
 
     /**
@@ -255,6 +274,76 @@ class ArticleController extends Controller
                 $article->picture_id=$picture_id;
             }
             $rs=$article->save();
+
+
+            //type=1 alias 又名
+            $alias = $request->input('alias');
+            //type=2 tag 标签
+            $tag = $request->input('tag');
+            //type=3 area 地区
+            $area = $request->input('area');
+            //type=4 director 导演
+            $director = $request->input('director');
+            //type=5 writer 编剧
+            $writer = $request->input('writer');
+            //type=6 cast 主演
+            $cast = $request->input('cast');
+            //type=7 imdb imdb
+            $imdb = $request->input('imdb');
+            //type=8 other 其他
+            $other = $request->input('other');
+            //type=9 download 下载地址
+            $download = $request->input('download');
+            //type=10 douban 豆瓣
+            $douban = $request->input('douban');
+            //type=11 douban 类型
+            $category = $request->input('category');
+
+            $article_id = $article->id;
+            $data = array();
+            $data[1] = $alias;
+            $data[2] = $tag;
+            $data[3] = $area;
+            $data[4] = $director;
+            $data[5] = $writer;
+            $data[6] = $cast;
+            $data[7] = $imdb;
+            $data[8] = $other;
+            $data[9] = $download;
+            $data[10] = $douban;
+            $data[11] = $category;
+            foreach ($data as $k => $v) {
+                if ($v != '') {
+                    foreach ($v as $kk => $vv) {
+                        if ($vv != '') {
+                            $content = trim($vv);
+                            $info = Info::where('content', '=', $content)->first();
+                            if ($info) {
+                                $info_id = $info->id;
+                            } else {
+                                $Info = new Info;
+                                $Info->content = $content;
+                                $Info->save();
+                                $info_id = $Info->id;
+                            }
+                            $articleinfo=ArticleInfo::where('article_id','=',$article_id)->where('info_id','=',$info_id)->where('type_id','=',$k)->first();
+                            if(!$articleinfo){
+                                $ArticleInfo = new ArticleInfo;
+                                $ArticleInfo->article_id = $article_id;
+                                $ArticleInfo->info_id = $info_id;
+                                $ArticleInfo->type_id = $k;
+                                $ArticleInfo->save();
+                            }
+                            //echo $info_id,'<br />';
+                        }
+                    }
+                }
+            }
+
+
+
+
+
             if($rs){
                 $message=array(
                     'errcode'=>0,

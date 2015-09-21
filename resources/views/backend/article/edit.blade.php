@@ -87,6 +87,187 @@
                     </div>
                 </div>
 
+                <div class="am-margin" style="text-align: center">
+                    <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+                    {{--<button type="button" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>--}}
+                </div>
+
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        1.又名
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="alias">添加</button>
+                    </div>
+                    <div class="am-u-sm-5">
+                        @if (isset($info[1]))
+                        @foreach ($info[1] as $alias)
+                            <p><input type="text" name="alias[]" value="{{$alias['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$alias['id']) }}'}">删除</span></p>
+                        @endforeach
+                        @endif
+                    </div>
+                    <div class="am-u-sm-5"></div>
+                </div>
+
+                <hr />
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        2.标签
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="tag">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[2]))
+                        @foreach ($info[2] as $tag)
+                            <p><input type="text" name="tag[]" value="{{$tag['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$tag['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+                <hr />
+
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        3.地区
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="area">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[3]))
+                        @foreach ($info[3] as $area)
+                            <p><input type="text" name="area[]" value="{{$area['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$area['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        4.导演
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="director">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[4]))
+                        @foreach ($info[4] as $director)
+                            <p><input type="text" name="director[]" value="{{$director['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$director['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        5.编剧
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="writer">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[5]))
+                        @foreach ($info[5] as $writer)
+                            <p><input type="text" name="writer[]" value="{{$writer['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$writer['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        6.主演
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="cast">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[6]))
+                        @foreach ($info[6] as $cast)
+                            <p><input type="text" name="cast[]" value="{{$cast['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$cast['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        7.imdb
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="imdb">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[7]))
+                        @foreach ($info[7] as $imdb)
+                            <p><input type="text" name="imdb[]" value="{{$imdb['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$imdb['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        8.其他
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="other">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[8]))
+                        @foreach ($info[8] as $other)
+                            <p><input type="text" name="other[]"  value="{{$other['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$other['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+                <hr />
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        9.下载
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[9]))
+                        @foreach ($info[9] as $download)
+                            <p><input type="text" name="download[]" value="{{$download['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$download['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        10.豆瓣
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="douban">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[10]))
+                        @foreach ($info[10] as $douban)
+                            <p><input type="text" name="douban[]" value="{{$douban['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$douban['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+
+                <hr />
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        11.类型
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="category">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        @if (isset($info[11]))
+                        @foreach ($info[11] as $category)
+                            <p><input type="text" name="category[]" value="{{$category['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$category['id']) }}'}">删除</span></p>
+                        @endforeach
+                            @endif
+                    </div>
+                </div>
+                <hr />
+
+
+
+
+
+
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         发布
@@ -110,6 +291,7 @@
                 </div>
         </form>
 
+       {{-- <form class="am-form" action="#" name="l-tags">
                 <hr />
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
@@ -117,8 +299,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="alias">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="alias[]"></p>
-                        <p><input type="text" name="alias[]"></p>
+                        @foreach ($info[1] as $alias)
+                            <p><input type="text" name="alias[]" value="{{$alias['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -130,9 +313,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="tag">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="tag[]"></p>
-                        <p><input type="text" name="tag[]"></p>
-                        <p><input type="text" name="tag[]"></p>
+                        @foreach ($info[2] as $tag)
+                            <p><input type="text" name="tag[]" value="{{$tag['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -145,7 +328,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="area">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="area[]"></p>
+                        @foreach ($info[3] as $area)
+                            <p><input type="text" name="area[]" value="{{$area['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -156,7 +341,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="director">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="director[]"></p>
+                        @foreach ($info[4] as $director)
+                            <p><input type="text" name="director[]" value="{{$director['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -167,7 +354,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="writer">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="writer[]"></p>
+                        @foreach ($info[5] as $writer)
+                            <p><input type="text" name="writer[]" value="{{$writer['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -178,7 +367,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="cast">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="cast[]"></p>
+                        @foreach ($info[6] as $cast)
+                            <p><input type="text" name="cast[]" value="{{$cast['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
                 <hr />
@@ -188,7 +379,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="imdb">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="imdb[]"></p>
+                        @foreach ($info[7] as $imdb)
+                            <p><input type="text" name="imdb[]" value="{{$imdb['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -200,7 +393,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="other">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="other[]"></p>
+                        @foreach ($info[8] as $other)
+                            <p><input type="text" name="other[]"  value="{{$other['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
                 <hr />
@@ -211,9 +406,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="download[]"></p>
-                        <p><input type="text" name="download[]"></p>
-                        <p><input type="text" name="download[]"></p>
+                        @foreach ($info[9] as $download)
+                            <p><input type="text" name="download[]" value="{{$download['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
 
@@ -225,7 +420,9 @@
                     　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="douban">添加</button>
                 </div>
                 <div class="am-u-sm-10">
-                    <p><input type="text" name="douban[]"></p>
+                    @foreach ($info[10] as $douban)
+                        <p><input type="text" name="douban[]" value="{{$douban['content']}}" readonly></p>
+                    @endforeach
                 </div>
                 </div>
 
@@ -236,13 +433,13 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="category">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="category[]"></p>
-                        <p><input type="text" name="category[]"></p>
-                        <p><input type="text" name="category[]"></p>
+                        @foreach ($info[11] as $category)
+                            <p><input type="text" name="category[]" value="{{$category['content']}}" readonly></p>
+                        @endforeach
                     </div>
                 </div>
                 <hr />
-
+</form>--}}
 
 
 
@@ -264,6 +461,38 @@
                 var nextd=me.parent().next().append(html);
                 console.log(nextd);
             });
+
+
+            $('.ll-destroy').on('click', function() {
+                //询问框
+                var it=$(this);
+                var json=it.attr('l-data-modal');
+                var obj=eval("("+json+")");
+                var target=obj.target;
+                var _token=$("input[name='_token']").val();
+
+                if(obj){
+                    layer.confirm('是否删除该条信息？', {
+                        btn: ['确定', '取消'], //按钮
+                        shade: 0.8
+                    }, function () {
+                        $.post(target,{_token:_token},function(result){
+                            console.log(result);
+                            if(result.errcode=='0'){
+                                layer.msg(result.message, {icon: 1});
+                                //console.log(parseInt($('.l-total').html()));
+                                it.parent().remove();
+                            }else{
+                                layer.msg(result.message, {icon: 2});
+                            }
+                        },'json');
+                    }, function () {
+                        //layer.msg('么么哒', {shift: 6});
+                    });
+                }
+            });
+
+
         })
     </script>
 @stop
