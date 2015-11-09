@@ -78,6 +78,26 @@
 
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
+                        豆瓣
+                    </div>
+                    <div class="am-u-sm-10">
+                        <p><input type="text" name="douban"></p>
+                    </div>
+                </div>
+
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        imdb
+                    </div>
+                    <div class="am-u-sm-10">
+                        <p><input type="text" name="imdb"></p>
+                    </div>
+                </div>
+
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
                         排序
                     </div>
                     <div class="am-u-sm-10">
@@ -156,16 +176,7 @@
                         <p><input type="text" name="cast[]"></p>
                     </div>
                 </div>
-                <hr />
-                <div class="am-g am-margin-top">
-                    <div class="am-u-sm-2">
-                        7.imdb
-                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="imdb">添加</button>
-                    </div>
-                    <div class="am-u-sm-10">
-                        <p><input type="text" name="imdb[]"></p>
-                    </div>
-                </div>
+
 
 
                 <hr />
@@ -192,17 +203,6 @@
                     </div>
                 </div>
 
-                <hr />
-
-                <div class="am-g am-margin-top">
-                <div class="am-u-sm-2">
-                    10.豆瓣
-                    　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="douban">添加</button>
-                </div>
-                <div class="am-u-sm-10">
-                    <p><input type="text" name="douban[]"></p>
-                </div>
-                </div>
 
                 <hr />
                 <div class="am-g am-margin-top">

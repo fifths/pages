@@ -118,6 +118,8 @@ class ArticleController extends Controller
             $Article->score = trim($score);
             $Article->status = trim($status);
             $Article->picture_id = $picture_id?:0;
+            $Article->imdb=$imdb;
+            $Article->douban=$douban;
             $rs = $Article->save();
             if ($rs) {
                 $article_id = $Article->id;
@@ -128,10 +130,10 @@ class ArticleController extends Controller
                 $data[4] = $director;
                 $data[5] = $writer;
                 $data[6] = $cast;
-                $data[7] = $imdb;
+                //$data[7] = $imdb;
                 $data[8] = $other;
                 $data[9] = $download;
-                $data[10] = $douban;
+                //$data[10] = $douban;
                 $data[11] = $category;
                 foreach ($data as $k => $v) {
                     if ($v != '') {
@@ -266,6 +268,8 @@ class ArticleController extends Controller
             $sort = $request->input('sort') ?: 100;
             $score = $request->input('score') ?: '10.0';
             $status = $request->input('status') ?: 0;
+            $imdb = $request->input('imdb');
+            $douban = $request->input('douban');
 
             $article->date = trim($date);
             $article->title = trim($title);
@@ -274,6 +278,8 @@ class ArticleController extends Controller
             $article->sort = trim($sort);
             $article->score = trim($score);
             $article->status = trim($status);
+            $article->imdb=$imdb;
+            $article->douban=$douban;
             if(isset($picture_id)){
                 $article->picture_id=$picture_id;
             }
@@ -293,13 +299,13 @@ class ArticleController extends Controller
             //type=6 cast 主演
             $cast = $request->input('cast');
             //type=7 imdb imdb
-            $imdb = $request->input('imdb');
+            //$imdb = $request->input('imdb');
             //type=8 other 其他
             $other = $request->input('other');
             //type=9 download 下载地址
             $download = $request->input('download');
             //type=10 douban 豆瓣
-            $douban = $request->input('douban');
+            //$douban = $request->input('douban');
             //type=11 douban 类型
             $category = $request->input('category');
 
@@ -311,10 +317,10 @@ class ArticleController extends Controller
             $data[4] = $director;
             $data[5] = $writer;
             $data[6] = $cast;
-            $data[7] = $imdb;
+            //$data[7] = $imdb;
             $data[8] = $other;
             $data[9] = $download;
-            $data[10] = $douban;
+            //$data[10] = $douban;
             $data[11] = $category;
             foreach ($data as $k => $v) {
                 if ($v != '') {

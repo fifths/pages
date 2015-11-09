@@ -77,6 +77,28 @@
                 </div>
 
 
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        豆瓣
+                    </div>
+                    <div class="am-u-sm-5">
+                        <p><input type="text" name="douban" value="{{$article->douban}}"></p>
+                    </div>
+                    <div class="am-u-sm-5"></div>
+                </div>
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        imdb
+                    </div>
+                    <div class="am-u-sm-5">
+                        <p><input type="text" name="imdb" value="{{$article->imdb}}"></p>
+                    </div>
+                    <div class="am-u-sm-5"></div>
+                </div>
+
+
+
 
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
@@ -190,21 +212,7 @@
                     </div>
                     <div class="am-u-sm-5"></div>
                 </div>
-                <hr />
-                <div class="am-g am-margin-top">
-                    <div class="am-u-sm-2">
-                        7.imdb
-                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="imdb">添加</button>
-                    </div>
-                    <div class="am-u-sm-5">
-                        @if (isset($info[7]))
-                        @foreach ($info[7] as $imdb)
-                            <p><input type="text" name="imdb[]" value="{{$imdb['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$imdb['id']) }}'}">删除</span></p>
-                        @endforeach
-                            @endif
-                    </div>
-                    <div class="am-u-sm-5"></div>
-                </div>
+
 
 
                 <hr />
@@ -239,22 +247,7 @@
                     <div class="am-u-sm-5"></div>
                 </div>
 
-                <hr />
 
-                <div class="am-g am-margin-top">
-                    <div class="am-u-sm-2">
-                        10.豆瓣
-                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="douban">添加</button>
-                    </div>
-                    <div class="am-u-sm-5">
-                        @if (isset($info[10]))
-                        @foreach ($info[10] as $douban)
-                            <p><input type="text" name="douban[]" value="{{$douban['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$douban['id']) }}'}">删除</span></p>
-                        @endforeach
-                            @endif
-                    </div>
-                    <div class="am-u-sm-5"></div>
-                </div>
 
                 <hr />
                 <div class="am-g am-margin-top">
