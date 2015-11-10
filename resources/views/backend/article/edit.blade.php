@@ -16,7 +16,7 @@
                     图片
                 </div>
                 <div class="am-u-sm-10">
-                    <img src="{{$pic}}" style="height:120px;border:1px solid #abc" />
+                    <img src="/uploads/{{$article->picture}}" style="height:120px;border:1px solid #abc" />
                     <br /><br />
                     <input type="file" name="picture">
                 </div>
@@ -33,10 +33,10 @@
 
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
-                        上映日期
+                        年份
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="date" value="{{$article->date}}" class="am-form-field" placeholder="日历组件" data-am-datepicker readonly/></p>
+                        <p><input type="text" name="date" value="{{$article->date}}" class="am-form-field" placeholder="日历"  /></p>
                     </div>
                 </div>
 
@@ -238,9 +238,9 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
                     </div>
                     <div class="am-u-sm-5">
-                        @if (isset($info[9]))
-                        @foreach ($info[9] as $download)
-                            <p><input type="text" name="download[]" value="{{$download['content']}}"><span class="ll-destroy" l-data-modal="{target: '{{ url('/backend/articleinfo/destroy/'.$download['id']) }}'}">删除</span></p>
+                        @if (isset($downloads))
+                        @foreach ($downloads as $download)
+                                <p><a href="/download/{{$download->path}}">{{basename($download->path)}}</a>  <span d_id="{{$download->id}}">删除</span></p>
                         @endforeach
                             @endif
                     </div>
@@ -460,7 +460,12 @@
             $('.l-b-add').on('click',function(){
                 var me=$(this);
                 type=me.attr('l-s-data');
-                var html='<p><input type="text" name="'+type+'[]"></p>';
+                if(type=='download'){
+                    text='file';
+                }else{
+                    text='text';
+                }
+                var html='<p><input type="'+text+'" name="'+type+'[]"></p>';
                 var nextd=me.parent().next().append(html);
                 console.log(nextd);
             });

@@ -55,7 +55,7 @@
                         <th class="table-id">ID</th>
                         <th class="table-title">标题</th>
                         <th class="table-title">别名</th>
-                        <th class="">上映日期</th>
+                        <th class="">上映年份</th>
                         <th class="">更新时间</th>
                         <th class="">状态</th>
                         <th class="table-set">操作</th>

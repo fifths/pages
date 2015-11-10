@@ -31,10 +31,10 @@
 
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
-                        日期
+                        年份
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="date" class="am-form-field" placeholder="日历组件" data-am-datepicker readonly/></p>
+                        <p><input type="text" name="date" class="am-form-field" placeholder="日历"  /></p>
                     </div>
                 </div>
 
@@ -113,7 +113,6 @@
                     </div>
                     <div class="am-u-sm-10">
                         <p><input type="text" name="alias[]"></p>
-                        <p><input type="text" name="alias[]"></p>
                     </div>
                 </div>
 
@@ -125,8 +124,6 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="tag">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="tag[]"></p>
-                        <p><input type="text" name="tag[]"></p>
                         <p><input type="text" name="tag[]"></p>
                     </div>
                 </div>
@@ -197,9 +194,7 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="download[]"></p>
-                        <p><input type="text" name="download[]"></p>
-                        <p><input type="text" name="download[]"></p>
+                        <p><input type="file" name="download[]"></p>
                     </div>
                 </div>
 
@@ -211,8 +206,6 @@
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="category">添加</button>
                     </div>
                     <div class="am-u-sm-10">
-                        <p><input type="text" name="category[]"></p>
-                        <p><input type="text" name="category[]"></p>
                         <p><input type="text" name="category[]"></p>
                     </div>
                 </div>
@@ -232,11 +225,11 @@
                     </div>
                     <div class="am-u-sm-10">
                         <label class="am-radio">
-                            <input type="radio" name="status" value="1" data-am-ucheck>
+                            <input type="radio" name="status" value="1" data-am-ucheck checked>
                             发布
                         </label>
                         <label class="am-radio">
-                            <input type="radio" name="status" value="0" data-am-ucheck checked>
+                            <input type="radio" name="status" value="0" data-am-ucheck>
                             不发布
                         </label>
                     </div>
@@ -259,7 +252,12 @@
             $('.l-b-add').on('click',function(){
                 var me=$(this);
                 type=me.attr('l-s-data');
-                var html='<p><input type="text" name="'+type+'[]"></p>';
+                if(type=='download'){
+                    text='file';
+                }else{
+                    text='text';
+                }
+                var html='<p><input type="'+text+'" name="'+type+'[]"></p>';
                 var nextd=me.parent().next().append(html);
                 console.log(nextd);
             });

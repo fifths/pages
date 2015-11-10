@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Download;
 use DB;
 use App\Article;
 use App\ArticleInfo;
@@ -20,7 +21,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::where('status','>=','0')->orderBy('id', 'desc')->paginate(10);
+        $articles = Article::where('status', '>=', '0')->orderBy('id', 'desc')->paginate(10);
         //无限级分类
         //$category=unlimitedForLevel($data);
         $title = '文章列表';
@@ -69,44 +70,43 @@ class ArticleController extends Controller
         //type=8 other 其他
         $other = $request->input('other');
         //type=9 download 下载地址
-        $download = $request->input('download');
+        $downloads = $request->file('download');
         //type=10 douban 豆瓣
         $douban = $request->input('douban');
         //type=11 douban 类型
         $category = $request->input('category');
 
 
-
         //die();
         if ($title != '') {
 
-            if ($picture&&$picture->isValid()) {
+            if ($picture && $picture->isValid()) {
                 $clientName = $picture->getClientOriginalName();
                 //$tmpName = $file->getFileName();
                 //$realPath = $file -> getRealPath();
-                $entension = $picture -> getClientOriginalExtension();
+                $entension = $picture->getClientOriginalExtension();
                 //$mimeTye = $file -> getMimeType();
                 //$size=$file->getClientSize();
-                $pass_type = array('jpg','jpeg','gif','bmp','png');
-                if(!in_array($entension,$pass_type)){
+                $pass_type = array('jpg', 'jpeg', 'gif', 'bmp', 'png');
+                if (!in_array($entension, $pass_type)) {
                     $message = array(
                         'errcode' => 1,
                         'message' => '上传文件类型不正确!'
                     );
                     return redirect()->back()->with('message', $message);
                 }
-                $time=time();
-                $newName = date('Ymdhis',$time).'e'.md5($clientName.$time).".".$entension;
+                $time = time();
+                $newName = date('Ymdhis', $time) . 'e' . substr(md5($clientName . $time), 8, 16) . "." . $entension;
 
-                $path = $picture -> move(base_path().'/public/uploads/'.date('Y-m',$time),$newName);
-                if($path){
-                    $Picture=new Picture;
+                $path = $picture->move(base_path() . '/public/uploads/' . date('Ym', $time), $newName);
+                if ($path) {
+                    /*$Picture=new Picture;
                     $Picture->name=$newName;
                     $Picture->save();
-                    $picture_id=$Picture->id;
+                    $picture_id=$Picture->id;*/
+                    $picture = date('Ym', $time) . '/' . $newName;
                 }
             }
-
 
 
             $Article = new Article;
@@ -117,12 +117,30 @@ class ArticleController extends Controller
             $Article->sort = trim($sort);
             $Article->score = trim($score);
             $Article->status = trim($status);
-            $Article->picture_id = $picture_id?:0;
-            $Article->imdb=$imdb;
-            $Article->douban=$douban;
+            $Article->picture = $picture ?: '';
+            $Article->imdb = $imdb;
+            $Article->douban = $douban;
             $rs = $Article->save();
             if ($rs) {
                 $article_id = $Article->id;
+
+
+                foreach ($downloads as $v) {
+                    if ($v && $v->isValid()) {
+                        $originName = $v->getClientOriginalName();
+                        $tmpName = $v->getFileName();
+                        $times = time();
+                        $path = $v->move(base_path() . '/public/download/' . date('Ym', $times), $originName);
+                        $Download=new Download();
+                        $Download->type=1;
+                        $Download->path=date('Ym', $times).'/'.$originName;
+                        $Download->sort=100;
+                        $Download->article_id=$article_id;
+                        $Download->save();
+                    }
+                }
+
+
                 $data = array();
                 $data[1] = $alias;
                 $data[2] = $tag;
@@ -132,7 +150,7 @@ class ArticleController extends Controller
                 $data[6] = $cast;
                 //$data[7] = $imdb;
                 $data[8] = $other;
-                $data[9] = $download;
+                //$data[9] = $download;
                 //$data[10] = $douban;
                 $data[11] = $category;
                 foreach ($data as $k => $v) {
@@ -192,27 +210,30 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        $article=Article::find($id);
-        if(!$article){
+        $article = Article::find($id);
+        if (!$article) {
             return redirect('backend/article/index');
         }
-        $picture=$article->picture;
+        /*$picture=$article->picture;
         $pic='';
         if($picture){
             $picturename=$picture->name;
             $pic='/uploads/'.date('Ym',strtotime($picture->created_at)).'/'.$picturename;
-        }
+        }*/
 
         //find tag content
         $results = DB::select('SELECT a.id,a.type_id,b.content FROM `lee_article_info` AS a LEFT JOIN `lee_info` AS b ON a.info_id=b.id WHERE article_id = ?', [$id]);
-        $info=array();
-        foreach($results as $k=>$v){
+        $info = array();
+        foreach ($results as $k => $v) {
             //subgroup
-            $data=array();
-            $data['id']=$v->id;
-            $data['content']=$v->content;
-            $info[$v->type_id][]=$data;
+            $data = array();
+            $data['id'] = $v->id;
+            $data['content'] = $v->content;
+            $info[$v->type_id][] = $data;
         }
+
+        $download=Download::where('article_id','=',$id)->where('type','=',1)->get();
+
 
 
         /*foreach($info[2] as $v=>$k){
@@ -220,7 +241,7 @@ class ArticleController extends Controller
         }*/
 
         //return $info;
-        return view('backend.article.edit')->with('article',$article)->with('pic',$pic)->with('info',$info);
+        return view('backend.article.edit')->with('article', $article)->with('info', $info)->with('downloads',$download);
     }
 
     /**
@@ -230,33 +251,37 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $article=Article::find($id);
-        if($article){
+        $article = Article::find($id);
+        if ($article->picture) {
+            unlink(base_path() . '/public/uploads/' . $article->picture);
+        }
+        if ($article) {
             $picture = $request->file('picture');
             //$picture_id=0;
-            if ($picture&&$picture->isValid()) {
+            if ($picture && $picture->isValid()) {
                 $clientName = $picture->getClientOriginalName();
                 //$tmpName = $file->getFileName();
                 //$realPath = $file -> getRealPath();
-                $entension = $picture -> getClientOriginalExtension();
+                $entension = $picture->getClientOriginalExtension();
                 //$mimeTye = $file -> getMimeType();
                 //$size=$file->getClientSize();
-                $pass_type = array('jpg','jpeg','gif','bmp','png');
-                if(!in_array($entension,$pass_type)){
+                $pass_type = array('jpg', 'jpeg', 'gif', 'bmp', 'png');
+                if (!in_array($entension, $pass_type)) {
                     $message = array(
                         'errcode' => 1,
                         'message' => '上传文件类型不正确!'
                     );
                     return redirect()->back()->with('message', $message);
                 }
-                $time=time();
-                $newName = date('Ymdhis',$time).'e'.md5($clientName.$time).".".$entension;
-                $path = $picture -> move(base_path().'/public/uploads/'.date('Ym',$time),$newName);
-                if($path){
-                    $Picture=new Picture;
+                $time = time();
+                $newName = date('Ymdhis', $time) . 'e' . substr(md5($clientName . $time), 8, 16) . "." . $entension;
+                $path = $picture->move(base_path() . '/public/uploads/' . date('Ym', $time), $newName);
+                if ($path) {
+                    /*$Picture=new Picture;
                     $Picture->name=$newName;
                     $Picture->save();
-                    $picture_id=$Picture->id;
+                    $picture_id=$Picture->id;*/
+                    $picture = date('Ym', $time) . '/' . $newName;
                 }
             }
 
@@ -278,12 +303,12 @@ class ArticleController extends Controller
             $article->sort = trim($sort);
             $article->score = trim($score);
             $article->status = trim($status);
-            $article->imdb=$imdb;
-            $article->douban=$douban;
-            if(isset($picture_id)){
-                $article->picture_id=$picture_id;
+            $article->imdb = $imdb;
+            $article->douban = $douban;
+            if (isset($picture)) {
+                $article->picture = $picture;
             }
-            $rs=$article->save();
+            $rs = $article->save();
 
 
             //type=1 alias 又名
@@ -336,8 +361,8 @@ class ArticleController extends Controller
                                 $Info->save();
                                 $info_id = $Info->id;
                             }
-                            $articleinfo=ArticleInfo::where('article_id','=',$article_id)->where('info_id','=',$info_id)->where('type_id','=',$k)->first();
-                            if(!$articleinfo){
+                            $articleinfo = ArticleInfo::where('article_id', '=', $article_id)->where('info_id', '=', $info_id)->where('type_id', '=', $k)->first();
+                            if (!$articleinfo) {
                                 $ArticleInfo = new ArticleInfo;
                                 $ArticleInfo->article_id = $article_id;
                                 $ArticleInfo->info_id = $info_id;
@@ -351,25 +376,21 @@ class ArticleController extends Controller
             }
 
 
-
-
-
-            if($rs){
-                $message=array(
-                    'errcode'=>0,
-                    'message'=>'success'
+            if ($rs) {
+                $message = array(
+                    'errcode' => 0,
+                    'message' => 'success'
                 );
-                return redirect()->back()->with('message',$message);
+                return redirect()->back()->with('message', $message);
             }
         }
 
-        $message=array(
-            'errcode'=>404,
-            'message'=>'not found!'
+        $message = array(
+            'errcode' => 404,
+            'message' => 'not found!'
         );
-        return redirect()->back()->with('message',$message);
+        return redirect()->back()->with('message', $message);
         //echo isset($picture_id);
-
 
 
     }
@@ -393,9 +414,9 @@ class ArticleController extends Controller
                 return json_encode($data);
             }
         }
-        $data=array(
-            'errcode'=>1,
-            'message'=>'failed!'
+        $data = array(
+            'errcode' => 1,
+            'message' => 'failed!'
         );
         return json_encode($data);
     }
