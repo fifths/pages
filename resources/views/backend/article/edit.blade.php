@@ -69,12 +69,30 @@
 
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
+                        下载
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
+                    </div>
+                    <div class="am-u-sm-5">
+                        @if (isset($downloads))
+                            @foreach ($downloads as $download)
+                                <p><a href="/download/{{$download->path}}">{{basename($download->path)}}</a>  <span d_id="{{$download->id}}">删除</span></p>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="am-u-sm-5"></div>
+                </div>
+
+
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
                         内容
                     </div>
                     <div class="am-u-sm-10">
                         <textarea rows="10" placeholder="" name="content">{{$article->content}}</textarea>
                     </div>
                 </div>
+
 
 
                 <div class="am-g am-margin-top">
@@ -132,7 +150,7 @@
 
                 <hr />
 
-                <div class="am-g am-margin-top">
+                {{--<div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         2.标签
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="tag">添加</button>
@@ -147,7 +165,7 @@
                     <div class="am-u-sm-5"></div>
                 </div>
 
-                <hr />
+                <hr />--}}
 
 
                 <div class="am-g am-margin-top">
@@ -216,7 +234,7 @@
 
 
                 <hr />
-                <div class="am-g am-margin-top">
+                {{--<div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         8.其他
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="other">添加</button>
@@ -230,22 +248,8 @@
                     </div>
                     <div class="am-u-sm-5"></div>
                 </div>
-                <hr />
+                <hr />--}}
 
-                <div class="am-g am-margin-top">
-                    <div class="am-u-sm-2">
-                        9.下载
-                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
-                    </div>
-                    <div class="am-u-sm-5">
-                        @if (isset($downloads))
-                        @foreach ($downloads as $download)
-                                <p><a href="/download/{{$download->path}}">{{basename($download->path)}}</a>  <span d_id="{{$download->id}}">删除</span></p>
-                        @endforeach
-                            @endif
-                    </div>
-                    <div class="am-u-sm-5"></div>
-                </div>
 
 
 

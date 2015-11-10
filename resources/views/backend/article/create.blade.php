@@ -65,6 +65,21 @@
                     </div>
                 </div>
 
+
+                <div class="am-g am-margin-top">
+                    <div class="am-u-sm-2">
+                        下载
+                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
+                    </div>
+                    <div class="am-u-sm-10">
+                        <p><input type="file" name="download[]"></p>
+                    </div>
+                </div>
+
+
+
+
+
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         内容
@@ -118,7 +133,7 @@
 
                 <hr />
 
-                <div class="am-g am-margin-top">
+                {{--<div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         2.标签
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="tag">添加</button>
@@ -128,7 +143,7 @@
                     </div>
                 </div>
 
-                <hr />
+                <hr />--}}
 
 
                 <div class="am-g am-margin-top">
@@ -177,7 +192,7 @@
 
 
                 <hr />
-                <div class="am-g am-margin-top">
+                {{--<div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         8.其他
                         　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="other">添加</button>
@@ -186,20 +201,9 @@
                         <p><input type="text" name="other[]"></p>
                     </div>
                 </div>
-                <hr />
-
-                <div class="am-g am-margin-top">
-                    <div class="am-u-sm-2">
-                        9.下载
-                        　<button type="button" class="am-btn am-btn-primary btn-loading-example l-b-add" l-s-data="download">添加</button>
-                    </div>
-                    <div class="am-u-sm-10">
-                        <p><input type="file" name="download[]"></p>
-                    </div>
-                </div>
+                <hr />--}}
 
 
-                <hr />
                 <div class="am-g am-margin-top">
                     <div class="am-u-sm-2">
                         11.类型

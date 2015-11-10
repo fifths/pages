@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Download;
+use Curl\Curl;
 use DB;
 use App\Article;
 use App\ArticleInfo;
@@ -56,7 +57,7 @@ class ArticleController extends Controller
         //type=1 alias 又名
         $alias = $request->input('alias');
         //type=2 tag 标签
-        $tag = $request->input('tag');
+        //$tag = $request->input('tag');
         //type=3 area 地区
         $area = $request->input('area');
         //type=4 director 导演
@@ -143,7 +144,7 @@ class ArticleController extends Controller
 
                 $data = array();
                 $data[1] = $alias;
-                $data[2] = $tag;
+                //$data[2] = $tag;
                 $data[3] = $area;
                 $data[4] = $director;
                 $data[5] = $writer;
@@ -314,7 +315,7 @@ class ArticleController extends Controller
             //type=1 alias 又名
             $alias = $request->input('alias');
             //type=2 tag 标签
-            $tag = $request->input('tag');
+            //$tag = $request->input('tag');
             //type=3 area 地区
             $area = $request->input('area');
             //type=4 director 导演
@@ -326,7 +327,7 @@ class ArticleController extends Controller
             //type=7 imdb imdb
             //$imdb = $request->input('imdb');
             //type=8 other 其他
-            $other = $request->input('other');
+            //$other = $request->input('other');
             //type=9 download 下载地址
             $download = $request->input('download');
             //type=10 douban 豆瓣
@@ -337,13 +338,13 @@ class ArticleController extends Controller
             $article_id = $article->id;
             $data = array();
             $data[1] = $alias;
-            $data[2] = $tag;
+            //$data[2] = $tag;
             $data[3] = $area;
             $data[4] = $director;
             $data[5] = $writer;
             $data[6] = $cast;
             //$data[7] = $imdb;
-            $data[8] = $other;
+            //$data[8] = $other;
             $data[9] = $download;
             //$data[10] = $douban;
             $data[11] = $category;
@@ -420,4 +421,33 @@ class ArticleController extends Controller
         );
         return json_encode($data);
     }
+
+    public function curl(Request $request){
+        $curl=New Curl();
+        $url='http://'.$_SERVER['HTTP_HOST'].'/api/douban.php';
+        $data=array();
+        $data['url']='http://movie.douban.com/subject/26147706/';
+        $getData=$curl->post($url,$data);
+        echo $getData;
+        $json=json_decode($getData,true);
+        $url= $json['pic'];
+
+        $ext = strrchr($url, '.');
+        $time=time();
+        $filename = date('Ym', $time).'/'.date('Ymdhis', $time) . 'e'.substr(md5($json['douban']),8,16) .$ext;
+        ob_start();
+        readfile($url);
+        $img = ob_get_contents();
+        ob_end_clean();
+        $size = strlen($img);
+        $fp2 = fopen(base_path() . '/public/uploads/'.$filename , "a");
+        fwrite($fp2, $img);
+        fclose($fp2);
+
+
+
+        //echo  $this->files($data['pic']);
+    }
+
+
 }
