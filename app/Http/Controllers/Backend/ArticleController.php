@@ -253,9 +253,7 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
         $article = Article::find($id);
-        if ($article->picture) {
-            unlink(base_path() . '/public/uploads/' . $article->picture);
-        }
+
         if ($article) {
             $picture = $request->file('picture');
             //$picture_id=0;
@@ -282,7 +280,13 @@ class ArticleController extends Controller
                     $Picture->name=$newName;
                     $Picture->save();
                     $picture_id=$Picture->id;*/
-                    $picture = date('Ym', $time) . '/' . $newName;
+                    $pictures = date('Ym', $time) . '/' . $newName;
+                    if ($article->picture!='') {
+                        $old_path=base_path() . '/public/uploads/' . $article->picture;
+                        if(file_exists($old_path)){
+                            unlink($old_path);
+                        }
+                    }
                 }
             }
 
@@ -306,8 +310,8 @@ class ArticleController extends Controller
             $article->status = trim($status);
             $article->imdb = $imdb;
             $article->douban = $douban;
-            if (isset($picture)) {
-                $article->picture = $picture;
+            if (isset($pictures)) {
+                $article->picture = $pictures;
             }
             $rs = $article->save();
 
@@ -329,13 +333,31 @@ class ArticleController extends Controller
             //type=8 other 其他
             //$other = $request->input('other');
             //type=9 download 下载地址
-            $download = $request->input('download');
+            $downloads = $request->file('download');
             //type=10 douban 豆瓣
             //$douban = $request->input('douban');
             //type=11 douban 类型
             $category = $request->input('category');
 
             $article_id = $article->id;
+
+
+            if(isset($downloads)){
+            foreach ($downloads as $v) {
+                if ($v && $v->isValid()) {
+                    $originName = $v->getClientOriginalName();
+                    $tmpName = $v->getFileName();
+                    $times = time();
+                    $path = $v->move(base_path() . '/public/download/' . date('Ym', $times), $originName);
+                    $Download=new Download();
+                    $Download->type=1;
+                    $Download->path=date('Ym', $times).'/'.$originName;
+                    $Download->sort=100;
+                    $Download->article_id=$article_id;
+                    $Download->save();
+                }
+            }
+            }
             $data = array();
             $data[1] = $alias;
             //$data[2] = $tag;
@@ -345,7 +367,7 @@ class ArticleController extends Controller
             $data[6] = $cast;
             //$data[7] = $imdb;
             //$data[8] = $other;
-            $data[9] = $download;
+            //$data[9] = $download;
             //$data[10] = $douban;
             $data[11] = $category;
             foreach ($data as $k => $v) {
@@ -422,29 +444,146 @@ class ArticleController extends Controller
         return json_encode($data);
     }
 
+
+
+
+
     public function curl(Request $request){
         $curl=New Curl();
         $url='http://'.$_SERVER['HTTP_HOST'].'/api/douban.php';
         $data=array();
-        $data['url']='http://movie.douban.com/subject/26147706/';
+        $message=array();
+        $data_array=array();
+        //$data['url']='http://movie.douban.com/subject/26147706/';
+        $data['url']='';
+        $data['url']=$request->input('url');
+        if($data['url']){
+
+
+        if (!preg_match("/^(http):/", $data['url'])){
+            $data['url'] = 'http://'.$data['url'];
+        }
+
+        $doubanss=explode("/",$data['url']);
+        $douban_id=$doubanss[4];
+        $article_info=Article::where('douban','=',$douban_id)->first();
+
+
+        if($article_info||!$douban_id){
+            $message = array(
+                'errcode' => 1,
+                'message' => 'douban已经存在!'
+            );
+        }
         $getData=$curl->post($url,$data);
-        echo $getData;
-        $json=json_decode($getData,true);
-        $url= $json['pic'];
+        //var_dump($getData);
+        $data_array=json_decode($getData,true);
+        }
+        return view('backend.article.curl')->with('datas',$data_array)->with('message',$message)->with('url',$data['url']);
+    }
+
+
+
+    public function doCurl(Request $request){
+        $curl=New Curl();
+        $url='http://'.$_SERVER['HTTP_HOST'].'/api/douban.php';
+        $data=array();
+        //$data['url']='http://movie.douban.com/subject/26147706/';
+        $data['url']=$request->input('url');
+
+
+        if (!preg_match("/^(http):/", $data['url'])){
+            $data['url'] = 'http://'.$data['url'];
+        }
+
+
+        $doubanss=explode("/",$data['url']);
+
+        $douban_id=$doubanss[4];
+
+        $article_info=Article::where('douban','=',$douban_id)->first();
+
+        if($article_info||!$douban_id){
+            die();
+        }
+
+        $getData=$curl->post($url,$data);
+        //echo $getData;
+        $data_array=json_decode($getData,true);
+        $url= $data_array['pic'];
 
         $ext = strrchr($url, '.');
         $time=time();
-        $filename = date('Ym', $time).'/'.date('Ymdhis', $time) . 'e'.substr(md5($json['douban']),8,16) .$ext;
+        $filename = date('Ym', $time).'/'.date('Ymdhis', $time) . 'e'.substr(md5($data_array['douban']),8,16) .$ext;
         ob_start();
         readfile($url);
         $img = ob_get_contents();
         ob_end_clean();
         $size = strlen($img);
+
+        if (!file_exists(dirname(base_path() . '/public/uploads/'.$filename))){
+            mkdir (dirname(base_path() . '/public/uploads/'.$filename));
+        }
+
         $fp2 = fopen(base_path() . '/public/uploads/'.$filename , "a");
         fwrite($fp2, $img);
         fclose($fp2);
 
 
+        $article=new Article();
+        $article->title=$data_array['title'][0];
+        if(isset($data_array['title'][1])){
+            $article->other_title=$data_array['title'][1];
+        }
+        $article->picture=$filename;
+        $article->date=$data_array['date'];
+        $article->score=$data_array['num'];
+        $article->douban=$data_array['douban'];
+        $article->imdb=$data_array['imdb'];
+        $article->content=$data_array['summary'];
+        $article->save();
+        $article_id=$article->id;
+
+
+
+        $data = array();
+        $data[1] = $data_array['alias'];
+        //$data[2] = $tag;
+        $data[3] = $data_array['area'];
+        $data[4] = $data_array['director'];
+        $data[5] = $data_array['writer'];
+        $data[6] = $data_array['cast'];
+        //$data[7] = $imdb;
+        //$data[8] = $other;
+        //$data[10] = $douban;
+        $data[11] = $data_array['type'];
+        foreach ($data as $k => $v) {
+            if ($v != '') {
+                foreach ($v as $kk => $vv) {
+                    if ($vv != '') {
+                        $content = trim($vv);
+                        $info = Info::where('content', '=', $content)->first();
+                        if ($info) {
+                            $info_id = $info->id;
+                        } else {
+                            $Info = new Info;
+                            $Info->content = $content;
+                            $Info->save();
+                            $info_id = $Info->id;
+                        }
+                        $articleinfo = ArticleInfo::where('article_id', '=', $article_id)->where('info_id', '=', $info_id)->where('type_id', '=', $k)->first();
+                        if (!$articleinfo) {
+                            $ArticleInfo = new ArticleInfo;
+                            $ArticleInfo->article_id = $article_id;
+                            $ArticleInfo->info_id = $info_id;
+                            $ArticleInfo->type_id = $k;
+                            $ArticleInfo->save();
+                        }
+                        //echo $info_id,'<br />';
+                    }
+                }
+            }
+        }
 
         //echo  $this->files($data['pic']);
     }

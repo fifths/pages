@@ -42,7 +42,7 @@ Route::group(['middleware' => 'manage'],function(){
     Route::post('/backend/article/update/{id}','Backend\ArticleController@update');
     Route::post('/backend/article/destroy/{id}','Backend\ArticleController@destroy');
     Route::get('/backend/curl','Backend\ArticleController@curl');
-
+    Route::get('/backend/docurl','Backend\ArticleController@doCurl');
     //tag
     Route::post('/backend/articleinfo/destroy/{id}','Backend\ArticleInfoController@destroy');
 });

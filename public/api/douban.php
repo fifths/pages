@@ -161,6 +161,14 @@ foreach ($html->find('strong[property=v:average]') as $post) {
 }
 
 
+
+$summary = '';
+foreach ($html->find('span[property=v:summary]') as $post) {
+    $summary = $post->innertext;
+}
+
+
+
 $data['douban'] = $douban;
 $data['title'] = $title;
 $data['alias'] = $alias;
@@ -171,8 +179,11 @@ $data['area'] = $area;
 $data['imdb'] = $imdb;
 $data['type'] = $type;
 $data['pic'] = $pic[0];
-$data['num'] = (int)$num;
-
+if($num==''){
+    $num=0;
+}
+$data['num'] = $num;
+$data['summary'] = $summary;
 $data['date'] = (int)$dates[0];
 
 
