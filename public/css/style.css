@@ -1,0 +1,36 @@
+body{
+    background: #F0F4E6;
+}
+.navbar-inverse{
+    background: #4cae4c;
+    border-color:#fff;
+}
+.navbar-inverse .navbar-brand{
+    color: #fff;
+}
+.navbar-inverse .navbar-nav>li>a{
+    color: #fff;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    color: #fff;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #fff;
+}
+body{
+    padding-top: 50px;
+}
+.des{
+    font-size:13px;
+    color: #666;
+}
+.l-post{
+    margin-top:10px;
+}
+.l-line{
+    height: 1px;
+    background: url(http://style.bttiantang.cc/style/Point.gif);
+}
+.bgs{
+    background:#fff;
+}
